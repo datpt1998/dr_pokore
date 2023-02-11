@@ -2,12 +2,9 @@ use std::cmp::Ordering;
 // use std::collections::HashSet;
 use std::rc::Rc;
 // use entity::card::{PokerCard, SolitaireCard};
-use crate::entity::card::Type;
-use service::poker_service::{Match};
-use crate::service::poker_service::{compare_score, score_by_two_deck};
-
-mod entity;
-mod service;
+use poker_core::entity::card::Type;
+use poker_core::service::poker_service::{Match};
+use poker_core::service::poker_service::{compare_score, score_by_two_deck};
 
 fn main() {
     println!("Hello, world!");
