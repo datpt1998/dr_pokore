@@ -5,6 +5,7 @@ use std::rc::Rc;
 use poker_core::entity::card::Type;
 use poker_core::service::poker_service::{Match};
 use poker_core::service::poker_service::{compare_score, score_by_two_deck};
+use poker_core::util::poker_util::to_string_decks;
 
 fn main() {
     println!("Hello, world!");
@@ -13,9 +14,9 @@ fn main() {
     let deck_1 = poker_match.draw_player().unwrap().into_iter().map(|card| Rc::new(card)).collect::<Vec<_>>();
     let deck_2 = poker_match.draw_player().unwrap().into_iter().map(|card| Rc::new(card)).collect::<Vec<_>>();
     let deck_general = poker_match.draw_general().unwrap().into_iter().map(|card| Rc::new(card)).collect::<Vec<_>>();
-    println!("Player 1: {:?}", deck_1);
-    println!("Player 2: {:?}", deck_2);
-    println!("General: {:?}", deck_general);
+    println!("Player 1: {}", to_string_decks(&deck_1));
+    println!("Player 2: {}", to_string_decks(&deck_2));
+    println!("General: {}", to_string_decks(&deck_general));
 
     let (score_1, chosen_1, type_1) = score_by_two_deck(&deck_1, &deck_general).unwrap();
     let (score_2, chosen_2, type_2) = score_by_two_deck(&deck_2, &deck_general).unwrap();

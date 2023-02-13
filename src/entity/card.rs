@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use std::fmt::{Debug, Formatter};
+use std::fmt::{Debug, format, Formatter};
 use std::hash::{Hash, Hasher};
 use std::rc::Rc;
 use Type::*;
@@ -131,3 +131,18 @@ impl Debug for PokerCard {
         f.write_str(&format!("{{{:?}, {:?}}}", number, &self.get_card_type()))
     }
 }
+
+impl ToString for PokerCard {
+    fn to_string(&self) -> String {
+        let number = match self.get_number() {
+            1 | 14 => String::from("A"),
+            11 => String::from("J"),
+            12 => String::from("Q"),
+            13 => String::from("K"),
+            x => x.to_string()
+        };
+        format!("{{{:?}, {:?}}}", number, &self.get_card_type())
+    }
+}
+
+
