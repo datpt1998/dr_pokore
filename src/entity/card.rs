@@ -6,25 +6,14 @@ use Type::*;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
-#[derive(EnumIter, Debug, PartialEq, Eq, Hash)]
+#[derive(EnumIter, Debug, PartialEq, Eq, Hash, Copy, Clone)]
 pub enum Type {
     SPADE, CLUB, HEART, DIAMOND
 }
 
-impl Type {
-    pub fn get_copy(&self) -> Type{
-        return match self {
-            CLUB => CLUB,
-            HEART => HEART,
-            DIAMOND => DIAMOND,
-            SPADE => SPADE
-        }
-    }
-}
-
 #[derive(Debug, Eq, PartialEq)]
 pub struct SolitaireCard {
-    card_type : Rc<Type>,
+    card_type : Type,
     number : i16
 }
 
@@ -34,7 +23,7 @@ pub struct PokerCard {
 }
 
 impl SolitaireCard {
-    pub fn new(card_type : Rc<Type>, number : i16) -> Self {
+    pub fn new(card_type : Type, number : i16) -> Self {
         SolitaireCard{
             card_type,
             number
@@ -44,16 +33,15 @@ impl SolitaireCard {
     pub fn get_all_card() -> Vec<SolitaireCard> {
         let mut result: Vec<SolitaireCard> = Vec::new();
         for card_type in Type::iter() {
-            let rc_card_type = Rc::new(card_type);
             for i in 1..=13 {
-                result.push(SolitaireCard::new(Rc::clone(&rc_card_type), i));
+                result.push(SolitaireCard::new(card_type, i));
             }
         }
         result
     }
 
-    pub fn get_card_type(&self) -> &Type {
-        self.card_type.as_ref()
+    pub fn get_card_type(&self) -> Type {
+        self.card_type
     }
 
     pub fn get_number(&self) -> i16 {
@@ -62,9 +50,9 @@ impl SolitaireCard {
 }
 
 impl PokerCard {
-    pub fn new_by_attribute(card_type : Rc<Type>, number : i16) ->Self {
+    pub fn new_by_attribute(card_type : Type, number : i16) ->Self {
         PokerCard{
-            card : SolitaireCard::new(Rc::clone(&card_type), number)
+            card : SolitaireCard::new(card_type, number)
         }
     }
 
@@ -82,8 +70,8 @@ impl PokerCard {
         result
     }
 
-    pub fn get_card_type(&self) -> &Type {
-        self.card.card_type.as_ref()
+    pub fn get_card_type(&self) -> Type {
+        self.card.card_type
     }
 
     pub fn get_number(&self) -> i16 {
@@ -91,7 +79,7 @@ impl PokerCard {
     }
 
     pub fn get_copy(&self) -> Self {
-        Self::new_by_attribute(Rc::new(self.get_card_type().get_copy()), self.get_number())
+        Self::new_by_attribute(self.get_card_type(), self.get_number())
     }
 }
 
@@ -128,7 +116,7 @@ impl Debug for PokerCard {
             13 => String::from("K"),
             x => x.to_string()
         };
-        f.write_str(&format!("{{{:?}, {:?}}}", number, &self.get_card_type()))
+        f.write_str(&format!("{{{:?}, {:?}}}", number, self.get_card_type()))
     }
 }
 
@@ -141,7 +129,7 @@ impl ToString for PokerCard {
             13 => String::from("K"),
             x => x.to_string()
         };
-        format!("{{{:?}, {:?}}}", number, &self.get_card_type())
+        format!("{{{:?}, {:?}}}", number, self.get_card_type())
     }
 }
 

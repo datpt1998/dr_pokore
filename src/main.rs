@@ -26,20 +26,4 @@ fn main() {
         Ordering::Less => {println!("Player 2 win with type {:?} and deck {:?} when player 1 have type {:?} and deck {:?}", type_2, chosen_2, type_1, chosen_1);}
         Ordering::Equal => {println!("Draw, player 1 have type {:?} and deck {:?}, player 2 have type {:?} and deck {:?}", type_1, chosen_1, type_2, chosen_2);}
     }
-
-    // let a = Rc::new(String::from("123"));
-    // let rc1 = Rc::from(&a);
-    // let rc2 = Rc::clone(&a);
-    // println!("{:?}", *rc1);
-    // println!("{:?}", *rc2);
-
-    // let a : Vec<String> = vec![String::from("1"), String::from("2"), String::from("3")];
-    // let a : Vec<Rc<String>> = a.iter().map(|s| Rc::new(String::from(s))).collect();
-    // println!("{:?}", a);
-
-    // let mut a = HashSet::from([Rc::new(PokerCard::new_by_attribute(Rc::new(Type::SPADE), 3)),
-    //                  Rc::new(PokerCard::new_by_attribute(Rc::new(Type::HEART), 3)),
-    //                  Rc::new(PokerCard::new_by_attribute(Rc::new(Type::DIAMOND), 4))]);
-    // // a.sort();
-    // println!("{:?}", a);
 }

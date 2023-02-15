@@ -99,12 +99,12 @@ fn score<'a>(deck: &Vec<Rc<PokerCard>>) -> Result<(PokerScore, [Rc<PokerCard>; 5
     let mut type_map : HashMap<card::Type, Vec<Rc<PokerCard>>> = HashMap::new();
     let mut deck_set = deck.iter().map(|card| Rc::clone(card)).collect::<HashSet<_>>();
     for card in deck.iter() {
-        push_value_to_map_vec(&mut type_map, card.get_card_type().get_copy(), Rc::clone(card));
+        push_value_to_map_vec(&mut type_map, card.get_card_type(), Rc::clone(card));
         if card.get_number() == 1 {
-            let big_a = Rc::new(PokerCard::new_by_attribute(Rc::new(card.get_card_type().get_copy()), 14));
+            let big_a = Rc::new(PokerCard::new_by_attribute(card.get_card_type(), 14));
             deck_set.insert(Rc::clone(&big_a));
             push_value_to_map_vec(&mut number_map, 14, Rc::clone(card));
-            push_value_to_map_vec(&mut type_map, card.get_card_type().get_copy(), Rc::clone(&big_a));
+            push_value_to_map_vec(&mut type_map, card.get_card_type(), Rc::clone(&big_a));
         } else {
             push_value_to_map_vec(&mut number_map, card.get_number(), Rc::clone(card));
         }
@@ -135,6 +135,7 @@ fn inner_score<'a>(number_map : &HashMap<i16, Vec<Rc<PokerCard>>>,
     if let Some((same_type_type, chosen)) = &same_type_result {
         if let FourOfAKind = same_type_type {
             result[1] = chosen[0].get_number();
+            result[13] = chosen[4].get_number();
             let mut chosen_copy : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::clone(&chosen[0]));
             for i in 0..chosen.len() {
                 chosen_copy[i] = Rc::clone(&chosen[i]);
@@ -180,6 +181,8 @@ fn inner_score<'a>(number_map : &HashMap<i16, Vec<Rc<PokerCard>>>,
     if let Some((same_type_type, chosen)) = &same_type_result {
         if let ThreeOfAKind = same_type_type {
             result[10] = chosen[0].get_number();
+            result[13] = chosen[3].get_number();
+            result[14] = chosen[4].get_number();
             let mut chosen_copy : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::clone(&chosen[0]));
             for i in 0..chosen.len() {
                 chosen_copy[i] = Rc::clone(&chosen[i]);
@@ -188,6 +191,7 @@ fn inner_score<'a>(number_map : &HashMap<i16, Vec<Rc<PokerCard>>>,
         } else if let TwoPair = same_type_type {
             result[11] = chosen[0].get_number();
             result[12] = chosen[2].get_number();
+            result[13] = chosen[4].get_number();
             let mut chosen_copy : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::clone(&chosen[0]));
             for i in 0..chosen.len() {
                 chosen_copy[i] = Rc::clone(&chosen[i]);
@@ -195,6 +199,9 @@ fn inner_score<'a>(number_map : &HashMap<i16, Vec<Rc<PokerCard>>>,
             return Ok((result, chosen_copy, same_type_type.to_string()));
         } else if let Pair = same_type_type {
             result[12] = chosen[0].get_number();
+            result[13] = chosen[2].get_number();
+            result[14] = chosen[3].get_number();
+            result[15] = chosen[4].get_number();
             let mut chosen_copy : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::clone(&chosen[0]));
             for i in 0..chosen.len() {
                 chosen_copy[i] = Rc::clone(&chosen[i]);
@@ -357,7 +364,7 @@ fn four_three_two_case(number_map : &HashMap<i16, Vec<Rc<PokerCard>>>) -> Option
 fn flush(type_map : &mut HashMap<card::Type, Vec<Rc<PokerCard>>>) -> Option<(Flush, [Rc<PokerCard>; 5])> {
     let mut biggest_top = 0 as i16;
     let mut biggest_normal = 0 as i16;
-    let placeholder = PokerCard::new_by_attribute(Rc::new(Type::SPADE), 1);
+    let placeholder = PokerCard::new_by_attribute(Type::SPADE, 1);
     let mut chosen_top : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::new(placeholder.get_copy()));
     let mut chosen_normal : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::new(placeholder.get_copy()));
 
