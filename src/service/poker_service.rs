@@ -60,7 +60,7 @@ impl Match {
         }
         let mut rng = rand::thread_rng();
         let mut result : Vec<PokerCard> = Vec::new();
-        for i in 0..draw_number {
+        for _i in 0..draw_number {
             result.push(self.each_draw(&mut rng));
         }
         Ok(result)
@@ -368,7 +368,7 @@ fn flush(type_map : &mut HashMap<card::Type, Vec<Rc<PokerCard>>>) -> Option<(Flu
     let mut chosen_top : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::new(placeholder.get_copy()));
     let mut chosen_normal : [Rc<PokerCard>; 5] = array_init::array_init(|_| Rc::new(placeholder.get_copy()));
 
-    for (key, value) in type_map.iter() {
+    for (_, value) in type_map.iter() {
         let number_vec = value.iter().map(|card| card.get_number()).collect::<Vec<_>>();
         let len = if number_vec.contains(&1) { value.len() - 1 } else { value.len() };
         if len >= 5 {
